@@ -16,12 +16,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.parkmate.ui.screens.AttractionDetailScreen
 import com.example.parkmate.ui.screens.CommunityScreen
 import com.example.parkmate.ui.screens.HomeScreen
+import com.example.parkmate.ui.screens.LoginScreen
 import com.example.parkmate.ui.screens.ParkDetailScreen
 import com.example.parkmate.ui.screens.ProfileScreen
 import com.example.parkmate.ui.screens.UploadScreen
 import com.example.parkmate.viewmodel.ParkViewModel
 
 private object Routes {
+    const val Login = "login"
     const val Home = "home"
     const val Community = "community"
     const val Profile = "profile"
@@ -54,9 +56,18 @@ fun ParkMateApp(parkViewModel: ParkViewModel) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.Home,
+            startDestination = Routes.Login,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Routes.Login) {
+                LoginScreen(
+                    onContinue = {
+                        navController.navigate(Routes.Home) {
+                            popUpTo(Routes.Login) { inclusive = true }
+                        }
+                    }
+                )
+            }
             composable(Routes.Home) {
                 val state by parkViewModel.uiState.collectAsStateWithLifecycle()
                 HomeScreen(

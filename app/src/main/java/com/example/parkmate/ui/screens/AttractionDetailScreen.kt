@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,9 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.parkmate.data.model.Attraction
+import com.example.parkmate.ui.components.ParkMateEmptyState
+import com.example.parkmate.ui.components.ParkMateSectionCard
+import com.example.parkmate.ui.preview.ParkMatePreviewData
+import com.example.parkmate.ui.theme.ParkMateTheme
 
 @Composable
 fun AttractionDetailScreen(
@@ -39,7 +41,10 @@ fun AttractionDetailScreen(
             Button(onClick = onBack) {
                 Text("Back")
             }
-            Text("Select an attraction from a park.")
+            ParkMateEmptyState(
+                title = "No attraction selected",
+                body = "Select an attraction from a park."
+            )
         }
         return
     }
@@ -62,7 +67,7 @@ fun AttractionDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
             )
         }
         item {
@@ -79,10 +84,10 @@ fun AttractionDetailScreen(
                 )
             }
         }
-        item { InfoSection(title = "Trail route", body = attraction.trailInfo) }
-        item { InfoSection(title = "Photo spots", body = attraction.photoTips) }
-        item { InfoSection(title = "Nearby food", body = attraction.nearbyFood) }
-        item { InfoSection(title = "Safety tips", body = attraction.safetyTips) }
+        item { ParkMateSectionCard(title = "Trail route", body = attraction.trailInfo) }
+        item { ParkMateSectionCard(title = "Photo spots", body = attraction.photoTips) }
+        item { ParkMateSectionCard(title = "Nearby food", body = attraction.nearbyFood) }
+        item { ParkMateSectionCard(title = "Safety tips", body = attraction.safetyTips) }
         item {
             Button(
                 onClick = onUploadClick,
@@ -94,27 +99,14 @@ fun AttractionDetailScreen(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-private fun InfoSection(title: String, body: String) {
-    Card(
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = body,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+private fun AttractionDetailScreenPreview() {
+    ParkMateTheme {
+        AttractionDetailScreen(
+            attraction = ParkMatePreviewData.tunnelView,
+            onBack = {},
+            onUploadClick = {}
+        )
     }
 }

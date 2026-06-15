@@ -22,10 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.parkmate.data.model.Attraction
 import com.example.parkmate.data.model.Park
+import com.example.parkmate.ui.components.ParkMateEmptyState
+import com.example.parkmate.ui.preview.ParkMatePreviewData
+import com.example.parkmate.ui.theme.ParkMateTheme
 
 @Composable
 fun ParkDetailScreen(
@@ -149,6 +153,21 @@ private fun EmptyDetail(onBack: () -> Unit, message: String) {
         Button(onClick = onBack) {
             Text("Back")
         }
-        Text(message, style = MaterialTheme.typography.bodyLarge)
+        ParkMateEmptyState(
+            title = "No park selected",
+            body = message
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ParkDetailScreenPreview() {
+    ParkMateTheme {
+        ParkDetailScreen(
+            park = ParkMatePreviewData.yosemite,
+            onBack = {},
+            onAttractionClick = {}
+        )
     }
 }

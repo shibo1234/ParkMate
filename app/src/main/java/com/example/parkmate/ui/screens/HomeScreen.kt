@@ -24,9 +24,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.parkmate.data.model.Park
+import com.example.parkmate.ui.preview.ParkMatePreviewData
+import com.example.parkmate.ui.theme.ParkMateTheme
 import com.example.parkmate.viewmodel.ParkUiState
 
 @Composable
@@ -117,5 +120,17 @@ private fun ParkCard(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenPreview() {
+    ParkMateTheme {
+        HomeScreen(
+            state = ParkMatePreviewData.homeState,
+            onSearchChange = {},
+            onParkClick = {}
+        )
     }
 }

@@ -196,7 +196,9 @@ Done:
 
 - Android Studio Kotlin project scaffold.
 - Jetpack Compose app shell.
-- Home, park detail, attraction detail, upload placeholder, community placeholder, and profile placeholder screens.
+- Login/sign up, home, park detail, attraction detail, upload placeholder, community placeholder, and profile placeholder screens.
+- Screen previews with dummy data for the intended screens.
+- Common reusable UI components under `ui/components`.
 - Local seed data for Yosemite, Yellowstone, and Grand Canyon.
 - `ParkRepository` and `ParkViewModel` unit tests.
 - Firebase dependencies added to Gradle.

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,61 +18,70 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.parkmate.ui.theme.ParkMateTheme
 
 @Composable
-fun UploadScreen(
-    onBack: () -> Unit,
-    onPostCreated: () -> Unit
+fun LoginScreen(
+    onContinue: () -> Unit
 ) {
-    var caption by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("demo@parkmate.app") }
+    var password by remember { mutableStateOf("password") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Button(onClick = onBack) {
-            Text("Back")
-        }
         Text(
-            text = "Create a park post",
-            style = MaterialTheme.typography.headlineMedium,
+            text = "ParkMate",
+            style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Photo picker and Firebase upload will connect here in the next implementation phase.",
+            text = "Sign in to save parks, upload trip photos, and join park-specific conversations.",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         OutlinedTextField(
-            value = caption,
-            onValueChange = { caption = it },
+            value = email,
+            onValueChange = { email = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Caption") },
-            minLines = 3,
+            label = { Text("Email") },
+            singleLine = true,
+            shape = RoundedCornerShape(8.dp)
+        )
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Password") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
             shape = RoundedCornerShape(8.dp)
         )
         Button(
-            onClick = onPostCreated,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = caption.isNotBlank()
+            onClick = onContinue,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Preview Post")
+            Text("Log In")
+        }
+        OutlinedButton(
+            onClick = onContinue,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Create Account")
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun UploadScreenPreview() {
+private fun LoginScreenPreview() {
     ParkMateTheme {
-        UploadScreen(
-            onBack = {},
-            onPostCreated = {}
-        )
+        LoginScreen(onContinue = {})
     }
 }
