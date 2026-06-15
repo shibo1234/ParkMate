@@ -1,6 +1,7 @@
 package com.example.parkmate.ui.navigation
 
 object Destinations {
+
     const val LOGIN = "login"
     const val HOME = "home"
     const val PARK_DETAIL = "park_detail"

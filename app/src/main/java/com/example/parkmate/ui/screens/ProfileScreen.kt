@@ -19,13 +19,18 @@ import androidx.compose.ui.unit.dp
 import com.example.parkmate.ui.theme.ParkMateTheme
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    onBack: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Button(onClick = onBack) {
+            Text("Back")
+        }
         Text(
             text = "Profile",
             style = MaterialTheme.typography.headlineMedium,
@@ -58,6 +63,6 @@ fun ProfileScreen() {
 @Composable
 private fun ProfileScreenPreview() {
     ParkMateTheme {
-        ProfileScreen()
+        ProfileScreen { }
     }
 }

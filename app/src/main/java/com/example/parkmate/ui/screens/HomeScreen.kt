@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,25 +37,37 @@ import com.example.parkmate.viewmodel.ParkUiState
 fun HomeScreen(
     state: ParkUiState,
     onSearchChange: (String) -> Unit,
-    onParkClick: (String) -> Unit
+    onParkClick: (String) -> Unit,
+    onProfileClick: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "ParkMate",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Plan routes, find photo spots, and share national park moments.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "ParkMate",
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Plan routes, find photo spots, and share national park moments.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Button(onClick = onProfileClick) {
+                    Text("Profile")
+                }
             }
         }
         item {
@@ -67,7 +80,7 @@ fun HomeScreen(
             )
         }
         items(state.parks, key = { it.id }) { park ->
-            ParkCard(park = park, onClick = { onParkClick(park.id) })
+            ParkCard(park = park) { onParkClick(park.id) }
         }
     }
 }
@@ -130,7 +143,7 @@ private fun HomeScreenPreview() {
         HomeScreen(
             state = ParkMatePreviewData.homeState,
             onSearchChange = {},
-            onParkClick = {}
-        )
+            onParkClick = {},
+        ) { }
     }
 }

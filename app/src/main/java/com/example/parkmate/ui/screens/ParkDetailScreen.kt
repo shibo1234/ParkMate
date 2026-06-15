@@ -35,7 +35,8 @@ import com.example.parkmate.ui.theme.ParkMateTheme
 fun ParkDetailScreen(
     park: Park?,
     onBack: () -> Unit,
-    onAttractionClick: (String) -> Unit
+    onAttractionClick: (String) -> Unit,
+    onCommunityClick: () -> Unit,
 ) {
     if (park == null) {
         EmptyDetail(onBack = onBack, message = "Select a park from Home.")
@@ -45,11 +46,19 @@ fun ParkDetailScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
-            Button(onClick = onBack) {
-                Text("Back")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = onBack) {
+                    Text("Back")
+                }
+                Button(onClick = onCommunityClick) {
+                    Text("Community")
+                }
             }
         }
         item {
@@ -92,8 +101,7 @@ fun ParkDetailScreen(
         items(park.attractions, key = { it.id }) { attraction ->
             AttractionRow(
                 attraction = attraction,
-                onClick = { onAttractionClick(attraction.id) }
-            )
+            ) { onAttractionClick(attraction.id) }
         }
     }
 }
@@ -167,7 +175,7 @@ private fun ParkDetailScreenPreview() {
         ParkDetailScreen(
             park = ParkMatePreviewData.yosemite,
             onBack = {},
-            onAttractionClick = {}
-        )
+            onAttractionClick = {},
+        ) { }
     }
 }

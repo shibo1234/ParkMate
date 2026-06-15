@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,12 +22,28 @@ import androidx.compose.ui.unit.dp
 import com.example.parkmate.ui.theme.ParkMateTheme
 
 @Composable
-fun CommunityScreen() {
+fun CommunityScreen(
+    onBack: () -> Unit,
+    onUploadClick: () -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(20.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = onBack) {
+                    Text("Back")
+                }
+                Button(onClick = onUploadClick) {
+                    Text("Upload")
+                }
+            }
+        }
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
@@ -64,7 +81,7 @@ fun CommunityScreen() {
 @Composable
 private fun CommunityScreenPreview() {
     ParkMateTheme {
-        CommunityScreen()
+        CommunityScreen(onBack = {}) { }
     }
 }
 
