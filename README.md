@@ -91,51 +91,35 @@ Bottom Navigation:
 Home | Community | Profile
 ```
 
-## UI Skeleton and Rubric Coverage
+## Current UI
 
-This repository includes the first skeleton for all intended proposal screens. The screens are implemented as Jetpack Compose composables with baseline layout structure, dummy data, and previews.
+The current version is the first working UI skeleton. It focuses on getting the app structure, navigation, screen layouts, and dummy data in place before Firebase logic is connected.
 
-### Intended Screens Implemented
+<p>
+  <img src="docs/screenshots/login.png" width="190" alt="ParkMate login screen" />
+  <img src="docs/screenshots/home.png" width="190" alt="ParkMate home screen" />
+  <img src="docs/screenshots/park-detail.png" width="190" alt="ParkMate park detail screen" />
+  <img src="docs/screenshots/attraction-detail.png" width="190" alt="ParkMate attraction detail screen" />
+</p>
 
-| Proposal screen | Compose file | Current skeleton contents |
-| --- | --- | --- |
-| Login / Sign Up | `app/src/main/java/com/example/parkmate/ui/screens/LoginScreen.kt` | Email/password fields, login button, create account button |
-| Home / Park List | `app/src/main/java/com/example/parkmate/ui/screens/HomeScreen.kt` | App title, search field, park cards, category chips |
-| Park Detail | `app/src/main/java/com/example/parkmate/ui/screens/ParkDetailScreen.kt` | Hero image, park overview, location, attraction list |
-| Attraction Detail | `app/src/main/java/com/example/parkmate/ui/screens/AttractionDetailScreen.kt` | Attraction image, route info, photo tips, nearby food, safety tips, upload entry point |
-| Camera / Upload | `app/src/main/java/com/example/parkmate/ui/screens/UploadScreen.kt` | Caption field, upload placeholder, post button |
-| Community | `app/src/main/java/com/example/parkmate/ui/screens/CommunityScreen.kt` | Dummy community post feed with user, park, caption, likes, and comments |
-| Profile | `app/src/main/java/com/example/parkmate/ui/screens/ProfileScreen.kt` | User profile card and logout button placeholder |
+The app currently includes the planned proposal screens:
 
-### Scaffold and Layout Structure
+- Login / Sign Up
+- Home / Park List
+- Park Detail
+- Attraction Detail
+- Camera / Upload
+- Community
+- Profile
 
-- `app/src/main/java/com/example/parkmate/ui/ParkMateApp.kt` defines the app-level `Scaffold`, navigation graph, and bottom navigation.
-- Top-level tabs: Home, Community, Profile.
-- Detail flow: Home -> Park Detail -> Attraction Detail -> Upload.
-- Login starts the app and routes into the main app skeleton.
+The UI code is organized under `app/src/main/java/com/example/parkmate/ui`:
 
-### Reusable UI Components
+- `ParkMateApp.kt` contains the app scaffold, navigation graph, and bottom navigation.
+- `screens/` contains the screen-level composables.
+- `components/` contains reusable UI pieces such as shared section cards and empty states.
+- `preview/` contains dummy data used by Android Studio previews.
 
-Reusable components are placed under `app/src/main/java/com/example/parkmate/ui/components`:
-
-- `ParkMateSectionCard`: shared section card for detail information blocks.
-- `ParkMateEmptyState`: reusable empty-state card for missing selections or placeholder states.
-
-Shared preview data is placed under `app/src/main/java/com/example/parkmate/ui/preview`:
-
-- `ParkMatePreviewData`: dummy parks, attractions, and home UI state used by previews.
-
-### Compose Previews with Dummy Data
-
-Each intended screen includes an Android Studio `@Preview` using dummy data:
-
-- `LoginScreenPreview`
-- `HomeScreenPreview`
-- `ParkDetailScreenPreview`
-- `AttractionDetailScreenPreview`
-- `UploadScreenPreview`
-- `CommunityScreenPreview`
-- `ProfileScreenPreview`
+Each screen has a Compose `@Preview` so the layouts can be checked quickly in Android Studio without running the full app.
 
 ### Data Strategy
 
