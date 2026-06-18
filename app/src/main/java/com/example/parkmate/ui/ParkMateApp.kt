@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.parkmate.ui.navigation.Destinations
 import com.example.parkmate.ui.screens.AttractionDetailScreen
 import com.example.parkmate.ui.screens.CommunityScreen
 import com.example.parkmate.ui.screens.HomeScreen
@@ -22,22 +23,12 @@ import com.example.parkmate.ui.screens.ProfileScreen
 import com.example.parkmate.ui.screens.UploadScreen
 import com.example.parkmate.viewmodel.ParkViewModel
 
-private object Routes {
-    const val LOGIN = "login"
-    const val HOME = "home"
-    const val COMMUNITY = "community"
-    const val PROFILE = "profile"
-    const val PARK_DETAIL = "park_detail"
-    const val ATTRACTION_DETAIL = "attraction_detail"
-    const val UPLOAD = "upload"
-}
-
 @Composable
 fun ParkMateApp(parkViewModel: ParkViewModel) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route ?: Routes.HOME
-    val showBottomBar = currentRoute in listOf(Routes.HOME, Routes.COMMUNITY, Routes.PROFILE)
+    val currentRoute = backStackEntry?.destination?.route ?: Destinations.HOME
+    val showBottomBar = currentRoute in listOf(Destinations.HOME, Destinations.COMMUNITY, Destinations.PROFILE)
 
     Scaffold(
         bottomBar = {
@@ -47,7 +38,7 @@ fun ParkMateApp(parkViewModel: ParkViewModel) {
                     onNavigate = { route ->
                         navController.navigate(route) {
                             launchSingleTop = true
-                            popUpTo(Routes.HOME)
+                            popUpTo(Destinations.HOME)
                         }
                     }
                 )
@@ -56,71 +47,71 @@ fun ParkMateApp(parkViewModel: ParkViewModel) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.LOGIN,
+            startDestination = Destinations.LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Routes.LOGIN) {
+            composable(Destinations.LOGIN) {
                 LoginScreen(
                     onContinue = {
-                        navController.navigate(Routes.HOME) {
-                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        navController.navigate(Destinations.HOME) {
+                            popUpTo(Destinations.LOGIN) { inclusive = true }
                         }
                     }
                 )
             }
-            composable(Routes.HOME) {
+            composable(Destinations.HOME) {
                 val state by parkViewModel.uiState.collectAsStateWithLifecycle()
                 HomeScreen(
                     state = state,
                     onSearchChange = parkViewModel::updateSearchQuery,
                     onParkClick = { parkId ->
                         parkViewModel.selectPark(parkId)
-                        navController.navigate(Routes.PARK_DETAIL)
+                        navController.navigate(Destinations.PARK_DETAIL)
                     },
                     onProfileClick = {
-                        navController.navigate(Routes.PROFILE)
+                        navController.navigate(Destinations.PROFILE)
                     }
                 )
             }
-            composable(Routes.PARK_DETAIL) {
+            composable(Destinations.PARK_DETAIL) {
                 val park by parkViewModel.selectedPark.collectAsStateWithLifecycle()
                 ParkDetailScreen(
                     park = park,
                     onBack = { navController.popBackStack() },
                     onAttractionClick = { attractionId ->
                         parkViewModel.selectAttraction(attractionId)
-                        navController.navigate(Routes.ATTRACTION_DETAIL)
+                        navController.navigate(Destinations.ATTRACTION_DETAIL)
                     },
                     onCommunityClick = {
-                        navController.navigate(Routes.COMMUNITY)
+                        navController.navigate(Destinations.COMMUNITY)
                     }
                 )
             }
-            composable(Routes.ATTRACTION_DETAIL) {
+            composable(Destinations.ATTRACTION_DETAIL) {
                 val attraction by parkViewModel.selectedAttraction.collectAsStateWithLifecycle()
                 AttractionDetailScreen(
                     attraction = attraction,
                     onBack = { navController.popBackStack() },
-                    onUploadClick = { navController.navigate(Routes.UPLOAD) }
+                    onUploadClick = { navController.navigate(Destinations.UPLOAD) }
                 )
             }
-            composable(Routes.UPLOAD) {
+            composable(Destinations.UPLOAD) {
                 UploadScreen(
                     onBack = { navController.popBackStack() },
                     onPostCreated = {
-                        navController.navigate(Routes.COMMUNITY) {
-                            popUpTo(Routes.HOME)
+                        navController.navigate(Destinations.COMMUNITY) {
+                            popUpTo(Destinations.HOME)
                         }
                     }
                 )
             }
-            composable(Routes.COMMUNITY) {
+            composable(Destinations.COMMUNITY) {
                 CommunityScreen(
                     onBack = { navController.popBackStack() },
-                    onUploadClick = { navController.navigate(Routes.UPLOAD) }
+                    onUploadClick = { navController.navigate(Destinations.UPLOAD) }
                 )
             }
-            composable(Routes.PROFILE) {
+            composable(Destinations.PROFILE) {
                 ProfileScreen(
                     onBack = { navController.popBackStack() }
                 )
@@ -136,9 +127,9 @@ private fun ParkMateBottomBar(
 ) {
     NavigationBar {
         listOf(
-            Routes.HOME to "Home",
-            Routes.COMMUNITY to "Community",
-            Routes.PROFILE to "Profile"
+            Destinations.HOME to "Home",
+            Destinations.COMMUNITY to "Community",
+            Destinations.PROFILE to "Profile"
         ).forEach { (route, label) ->
             NavigationBarItem(
                 selected = currentRoute == route,

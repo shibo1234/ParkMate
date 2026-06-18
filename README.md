@@ -1,5 +1,7 @@
 # ParkMate
 
+**Version:** 0.2.0
+
 ParkMate is a native Android travel companion app for National Park visitors. It combines a focused park guide with a photo-sharing community so users can plan a visit, browse attractions, upload photos, and exchange tips with other travelers.
 
 ## High-Level Design
@@ -115,6 +117,7 @@ The app currently includes the planned proposal screens:
 The UI code is organized under `app/src/main/java/com/example/parkmate/ui`:
 
 - `ParkMateApp.kt` contains the app scaffold, navigation graph, and bottom navigation.
+- `navigation/Destination.kt` contains the route names used by the app navigation.
 - `screens/` contains the screen-level composables.
 - `components/` contains reusable UI pieces such as shared section cards and empty states.
 - `preview/` contains dummy data used by Android Studio previews.
