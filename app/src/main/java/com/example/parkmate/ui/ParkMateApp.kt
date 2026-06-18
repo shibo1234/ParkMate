@@ -6,6 +6,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,14 +22,19 @@ import com.example.parkmate.ui.screens.LoginScreen
 import com.example.parkmate.ui.screens.ParkDetailScreen
 import com.example.parkmate.ui.screens.ProfileScreen
 import com.example.parkmate.ui.screens.UploadScreen
+import com.example.parkmate.viewmodel.AuthViewModel
 import com.example.parkmate.viewmodel.ParkViewModel
 
 @Composable
-fun ParkMateApp(parkViewModel: ParkViewModel) {
+fun ParkMateApp(
+    parkViewModel: ParkViewModel,
+    authViewModel: AuthViewModel
+) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: Destinations.HOME
     val showBottomBar = currentRoute in listOf(Destinations.HOME, Destinations.COMMUNITY, Destinations.PROFILE)
+    val authState by authViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         bottomBar = {
@@ -52,11 +58,12 @@ fun ParkMateApp(parkViewModel: ParkViewModel) {
         ) {
             composable(Destinations.LOGIN) {
                 LoginScreen(
-                    onContinue = {
-                        navController.navigate(Destinations.HOME) {
-                            popUpTo(Destinations.LOGIN) { inclusive = true }
-                        }
-                    }
+                    state = authState,
+                    onDisplayNameChange = authViewModel::updateDisplayName,
+                    onEmailChange = authViewModel::updateEmail,
+                    onPasswordChange = authViewModel::updatePassword,
+                    onLoginClick = authViewModel::signIn,
+                    onSignUpClick = authViewModel::signUp
                 )
             }
             composable(Destinations.HOME) {
@@ -113,8 +120,23 @@ fun ParkMateApp(parkViewModel: ParkViewModel) {
             }
             composable(Destinations.PROFILE) {
                 ProfileScreen(
-                    onBack = { navController.popBackStack() }
+                    user = authState.currentUser,
+                    onBack = { navController.popBackStack() },
+                    onLogout = {
+                        authViewModel.signOut()
+                        navController.navigate(Destinations.LOGIN) {
+                            popUpTo(Destinations.HOME) { inclusive = true }
+                        }
+                    }
                 )
+            }
+        }
+    }
+
+    LaunchedEffect(authState.isAuthenticated, currentRoute) {
+        if (authState.isAuthenticated && currentRoute == Destinations.LOGIN) {
+            navController.navigate(Destinations.HOME) {
+                popUpTo(Destinations.LOGIN) { inclusive = true }
             }
         }
     }

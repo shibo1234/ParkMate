@@ -7,29 +7,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.parkmate.ui.theme.ParkMateTheme
+import com.example.parkmate.viewmodel.AuthUiState
 
 @Composable
 fun LoginScreen(
-    onContinue: () -> Unit
+    state: AuthUiState,
+    onDisplayNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit
 ) {
-    var email by remember { mutableStateOf("demo@parkmate.app") }
-    var password by remember { mutableStateOf("password") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,31 +47,52 @@ fun LoginScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = state.displayName,
+            onValueChange = onDisplayNameChange,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Display name") },
+            singleLine = true,
+            shape = RoundedCornerShape(8.dp)
+        )
+        OutlinedTextField(
+            value = state.email,
+            onValueChange = onEmailChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Email") },
             singleLine = true,
             shape = RoundedCornerShape(8.dp)
         )
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = state.password,
+            onValueChange = onPasswordChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Password") },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             shape = RoundedCornerShape(8.dp)
         )
+        state.errorMessage?.let { errorMessage ->
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
         Button(
-            onClick = onContinue,
-            modifier = Modifier.fillMaxWidth()
+            onClick = onLoginClick,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading
         ) {
-            Text("Log In")
+            if (state.isLoading) {
+                CircularProgressIndicator()
+            } else {
+                Text("Log In")
+            }
         }
         OutlinedButton(
-            onClick = onContinue,
-            modifier = Modifier.fillMaxWidth()
+            onClick = onSignUpClick,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading
         ) {
             Text("Create Account")
         }
@@ -82,6 +103,17 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     ParkMateTheme {
-        LoginScreen(onContinue = {})
+        LoginScreen(
+            state = AuthUiState(
+                displayName = "Demo Traveler",
+                email = "demo@parkmate.app",
+                password = "password"
+            ),
+            onDisplayNameChange = {},
+            onEmailChange = {},
+            onPasswordChange = {},
+            onLoginClick = {},
+            onSignUpClick = {}
+        )
     }
 }

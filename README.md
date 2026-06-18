@@ -1,6 +1,6 @@
 # ParkMate
 
-**Version:** 0.2.0
+**Version:** 0.3.0
 
 ParkMate is a native Android travel companion app for National Park visitors. It combines a focused park guide with a photo-sharing community so users can plan a visit, browse attractions, upload photos, and exchange tips with other travelers.
 
@@ -30,6 +30,21 @@ Authentication: Firebase Authentication
 File Storage: Firebase Storage
 Device Features: Camera, Photo Picker, Location
 ```
+
+### Firebase Setup
+
+Firebase dependencies are already included. The app uses Firebase Authentication for login/sign-up and Firestore for creating a user profile after registration.
+
+To connect a real Firebase project:
+
+1. Create a Firebase project in the Firebase Console.
+2. Add an Android app with package name `com.example.parkmate`.
+3. Download `google-services.json`.
+4. Place it at `app/google-services.json`.
+5. Enable Email/Password sign-in in Firebase Authentication.
+6. Create a Firestore database.
+
+The Gradle build automatically applies the Google Services plugin when `app/google-services.json` is present. The file is gitignored so local Firebase credentials are not committed.
 
 ### System Architecture
 
@@ -235,20 +250,18 @@ Done:
 - Local seed data for Yosemite, Yellowstone, and Grand Canyon.
 - `ParkRepository` and `ParkViewModel` unit tests.
 - Firebase dependencies added to Gradle.
+- Firebase Auth repository and AuthViewModel added.
+- Login and sign-up UI connected to authentication state.
+- Profile screen reads the authenticated user and supports logout.
 
 Next required tasks:
 
 1. Create the Firebase project and add `app/google-services.json`.
-2. Enable the Google Services Gradle plugin.
-3. Implement Firebase Auth registration, login, logout, and user profile creation.
-4. Replace upload placeholder with Android Photo Picker and Firebase Storage upload.
-5. Replace community placeholder posts with Firestore posts.
-6. Add like and comment repository methods.
+2. Test registration/login against the real Firebase project.
+3. Replace upload placeholder with Android Photo Picker and Firebase Storage upload.
+4. Replace community placeholder posts with Firestore posts.
+5. Add like and comment repository methods.
 
 ## Firebase Setup Note
 
-The Gradle Firebase dependencies are present, but the Google Services plugin is commented out until `app/google-services.json` is added from the Firebase Console. After adding the file, enable this line in `app/build.gradle.kts`:
-
-```kotlin
-alias(libs.plugins.google.services)
-```
+The app uses `DisabledAuthRepository` when `google-services.json` is missing. This keeps the skeleton runnable before Firebase credentials are added and shows a clear setup error on the login screen instead of crashing.
