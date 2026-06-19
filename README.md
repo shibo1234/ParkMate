@@ -235,15 +235,15 @@ Done:
 - Local seed data for Yosemite, Yellowstone, and Grand Canyon.
 - `ParkRepository` and `ParkViewModel` unit tests.
 - Firebase dependencies added to Gradle.
+- Create the Firebase project and add `app/google-services.json`.
+- Enable the Google Services Gradle plugin.
 
 Next required tasks:
 
-1. Create the Firebase project and add `app/google-services.json`.
-2. Enable the Google Services Gradle plugin.
-3. Implement Firebase Auth registration, login, logout, and user profile creation.
-4. Replace upload placeholder with Android Photo Picker and Firebase Storage upload.
-5. Replace community placeholder posts with Firestore posts.
-6. Add like and comment repository methods.
+1. Implement Firebase Auth registration, login, logout, and user profile creation.
+2. Replace upload placeholder with Android Photo Picker and Firebase Storage upload.
+3. Replace community placeholder posts with Firestore posts.
+4. Add like and comment repository methods.
 
 ## Firebase Setup Note
 
