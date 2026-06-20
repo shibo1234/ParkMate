@@ -56,7 +56,8 @@ class FirebasePostRepository(
         user: UserProfile,
         caption: String,
         imageUri: Uri?,
-        parkId: String
+        parkId: String,
+        attractionId: String?
     ): Result<Unit> {
         return runCatching {
             val postDocument = firestore.collection(POSTS_COLLECTION).document()
@@ -72,7 +73,7 @@ class FirebasePostRepository(
                         "userId" to user.id,
                         "userName" to user.displayName.ifBlank { user.email },
                         "parkId" to parkId,
-                        "attractionId" to null,
+                        "attractionId" to attractionId,
                         "imageUrl" to imageUrl,
                         "caption" to caption.trim(),
                         "likeCount" to 0,

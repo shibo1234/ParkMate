@@ -61,7 +61,7 @@ class PostViewModel(
         }
     }
 
-    fun createPost(user: UserProfile?) {
+    fun createPost(user: UserProfile?, parkId: String = "yosemite", attractionId: String? = null) {
         val state = uiState.value
         val validationError = PostFormValidator.validateCreatePost(
             userId = user?.id.orEmpty(),
@@ -77,7 +77,9 @@ class PostViewModel(
             val result = postRepository.createPost(
                 user = requireNotNull(user),
                 caption = state.caption,
-                imageUri = state.selectedImageUri
+                imageUri = state.selectedImageUri,
+                parkId = parkId.ifBlank { "yosemite" },
+                attractionId = attractionId
             )
             _uiState.update { currentState ->
                 result.fold(

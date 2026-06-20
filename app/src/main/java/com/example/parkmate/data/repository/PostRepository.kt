@@ -13,7 +13,8 @@ interface PostRepository {
         user: UserProfile,
         caption: String,
         imageUri: Uri? = null,
-        parkId: String = "yosemite"
+        parkId: String = "yosemite",
+        attractionId: String? = null
     ): Result<Unit>
 
     /** Returns which of [postIds] the given user has liked. */

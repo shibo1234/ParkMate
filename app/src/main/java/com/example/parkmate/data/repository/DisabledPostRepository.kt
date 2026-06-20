@@ -16,7 +16,8 @@ class DisabledPostRepository : PostRepository {
         user: UserProfile,
         caption: String,
         imageUri: Uri?,
-        parkId: String
+        parkId: String,
+        attractionId: String?
     ): Result<Unit> {
         return Result.failure(IllegalStateException(SETUP_MESSAGE))
     }

@@ -1,17 +1,22 @@
 package com.example.parkmate.data.repository
 
+import android.net.Uri
 import com.example.parkmate.data.model.UserProfile
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class FirebaseAuthRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 ) : AuthRepository {
     override fun currentUser(): UserProfile? {
         val firebaseUser = auth.currentUser ?: return null
@@ -26,7 +31,16 @@ class FirebaseAuthRepository(
     override suspend fun signIn(email: String, password: String): Result<UserProfile> {
         return runCatching {
             val authResult = auth.signInWithEmailAndPassword(email.trim(), password).await()
-            authResult.toUserProfile()
+            val user = authResult.toUserProfile()
+            // Make sure a users/{uid} document exists even for accounts created before this was added.
+            firestore.collection("users")
+                .document(user.id)
+                .set(
+                    mapOf("displayName" to user.displayName, "email" to user.email),
+                    SetOptions.merge()
+                )
+                .await()
+            user
         }
     }
 
@@ -46,6 +60,29 @@ class FirebaseAuthRepository(
                 )
                 .await()
             user
+        }
+    }
+
+    override suspend fun updateProfilePhoto(userId: String, photoUri: Uri): Result<String> {
+        if (userId.isBlank()) {
+            return Result.failure(IllegalArgumentException("A signed-in user is required."))
+        }
+
+        return runCatching {
+            val photoRef = storage.reference.child("profile_images/$userId.jpg")
+            photoRef.putFile(photoUri).await()
+            val downloadUrl = photoRef.downloadUrl.await().toString()
+
+            firestore.collection("users")
+                .document(userId)
+                .set(mapOf("photoUrl" to downloadUrl), SetOptions.merge())
+                .await()
+
+            auth.currentUser?.updateProfile(
+                userProfileChangeRequest { this.photoUri = Uri.parse(downloadUrl) }
+            )?.await()
+
+            downloadUrl
         }
     }
 

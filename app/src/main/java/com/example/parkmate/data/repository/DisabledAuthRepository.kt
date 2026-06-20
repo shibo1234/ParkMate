@@ -1,5 +1,6 @@
 package com.example.parkmate.data.repository
 
+import android.net.Uri
 import com.example.parkmate.data.model.UserProfile
 
 class DisabledAuthRepository : AuthRepository {
@@ -10,6 +11,10 @@ class DisabledAuthRepository : AuthRepository {
     }
 
     override suspend fun signUp(displayName: String, email: String, password: String): Result<UserProfile> {
+        return Result.failure(IllegalStateException(FIREBASE_NOT_CONFIGURED))
+    }
+
+    override suspend fun updateProfilePhoto(userId: String, photoUri: Uri): Result<String> {
         return Result.failure(IllegalStateException(FIREBASE_NOT_CONFIGURED))
     }
 

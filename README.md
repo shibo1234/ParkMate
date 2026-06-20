@@ -110,7 +110,7 @@ Home | Community | Profile
 
 ## Current UI
 
-The current version connects the main Firebase-backed community flow. Users can authenticate, create community posts, view the Firestore feed, and increment post likes. Photo upload is implemented in code but requires a Firebase Storage bucket, which may require the Blaze plan for new Firebase projects.
+The current version connects the main Firebase-backed community flow. Users can authenticate, create community posts tagged with the park/attraction they were viewing, browse the Firestore feed, like/unlike and comment on posts, save parks, and manage a profile (own posts, saved parks, and a profile photo). Photo upload (post and profile photos) is implemented in code but requires a Firebase Storage bucket, which may require the Blaze plan for new Firebase projects.
 
 <p>
   <img src="docs/screenshots/login.png" width="190" alt="ParkMate login screen" />
@@ -263,13 +263,25 @@ Done:
 - Community posts support comments. Each card expands an inline thread that reads the
   `posts/{postId}/comments` subcollection in real time, and posting a comment writes the document and
   increments the atomic `commentCount` in a single Firestore transaction.
-- Profile screen lists posts authored by the current signed-in user.
+- Profile screen lists posts authored by the current signed-in user, shows their saved parks, and
+  supports uploading a profile photo to `profile_images/{userId}.jpg`.
+- Posts are tagged with the park (and attraction, when uploaded from an attraction) the user was
+  viewing, instead of always defaulting to Yosemite.
+- Save/unsave parks. The park detail screen toggles a `users/{userId}/savedParks/{parkId}` document,
+  and `ProfileViewModel` restores the saved set in real time.
+- Sign-in ensures a `users/{userId}` document exists (merged), so accounts created before that step
+  still get a profile document.
+- Firestore and Storage security rules drafted in `firestore.rules` and `storage.rules`.
 
 Next required tasks:
 
-1. Tighten Firestore and Storage security rules for authenticated users.
+1. Deploy the drafted security rules (`firebase deploy --only firestore:rules,storage`) and verify
+   them against the app before release.
 2. Final UI polish and emulator walkthrough testing.
 3. Keep Firebase Storage optional unless the project is upgraded to Blaze.
+
+Stretch goals (GPS nearby parks, compass, map view, itinerary planning, friend/follow, push
+notifications) remain out of scope for the current milestone.
 
 ## Firebase Setup Note
 
@@ -279,3 +291,8 @@ Restoring a user's liked posts reads each visible post's `likes/{userId}` docume
 read on a known path). This deliberately avoids a `collectionGroup("likes").whereEqualTo("userId", ...)`
 query, which would require a single-field collection-group index to be created in the Firebase console
 before it works.
+
+Security rules are drafted in `firestore.rules` and `storage.rules` at the project root. They allow
+signed-in users to read the feed, write only their own posts/likes/comments/saved-parks, and upload
+only their own post and profile photos. Deploy them with
+`firebase deploy --only firestore:rules,storage` (test-mode rules are fine for local development).

@@ -1,5 +1,6 @@
 package com.example.parkmate.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ data class AuthUiState(
     val password: String = "",
     val currentUser: UserProfile? = null,
     val isLoading: Boolean = false,
+    val isUploadingPhoto: Boolean = false,
     val errorMessage: String? = null
 ) {
     val isAuthenticated: Boolean
@@ -71,6 +73,32 @@ class AuthViewModel(
 
         authenticate {
             authRepository.signUp(state.displayName, state.email, state.password)
+        }
+    }
+
+    fun updateProfilePhoto(photoUri: Uri?) {
+        val userId = uiState.value.currentUser?.id
+        if (photoUri == null || userId.isNullOrBlank()) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isUploadingPhoto = true, errorMessage = null) }
+            val result = authRepository.updateProfilePhoto(userId, photoUri)
+            _uiState.update { state ->
+                result.fold(
+                    onSuccess = { url ->
+                        state.copy(
+                            isUploadingPhoto = false,
+                            currentUser = state.currentUser?.copy(photoUrl = url)
+                        )
+                    },
+                    onFailure = { error ->
+                        state.copy(
+                            isUploadingPhoto = false,
+                            errorMessage = error.message ?: "Photo upload failed."
+                        )
+                    }
+                )
+            }
         }
     }
 

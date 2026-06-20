@@ -25,12 +25,14 @@ import com.example.parkmate.ui.screens.UploadScreen
 import com.example.parkmate.viewmodel.AuthViewModel
 import com.example.parkmate.viewmodel.ParkViewModel
 import com.example.parkmate.viewmodel.PostViewModel
+import com.example.parkmate.viewmodel.ProfileViewModel
 
 @Composable
 fun ParkMateApp(
     parkViewModel: ParkViewModel,
     authViewModel: AuthViewModel,
-    postViewModel: PostViewModel
+    postViewModel: PostViewModel,
+    profileViewModel: ProfileViewModel
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -38,6 +40,7 @@ fun ParkMateApp(
     val showBottomBar = currentRoute in listOf(Destinations.HOME, Destinations.COMMUNITY, Destinations.PROFILE)
     val authState by authViewModel.uiState.collectAsStateWithLifecycle()
     val postState by postViewModel.uiState.collectAsStateWithLifecycle()
+    val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         bottomBar = {
@@ -87,6 +90,10 @@ fun ParkMateApp(
                 val park by parkViewModel.selectedPark.collectAsStateWithLifecycle()
                 ParkDetailScreen(
                     park = park,
+                    isSaved = park != null && park!!.id in profileState.savedParkIds,
+                    onSaveToggle = {
+                        park?.let { profileViewModel.toggleSavedPark(it.id, authState.currentUser?.id) }
+                    },
                     onBack = { navController.popBackStack() },
                     onAttractionClick = { attractionId ->
                         parkViewModel.selectAttraction(attractionId)
@@ -111,7 +118,13 @@ fun ParkMateApp(
                     onCaptionChange = postViewModel::updateCaption,
                     onImageSelected = postViewModel::updateSelectedImage,
                     onBack = { navController.popBackStack() },
-                    onCreatePost = { postViewModel.createPost(authState.currentUser) }
+                    onCreatePost = {
+                        postViewModel.createPost(
+                            user = authState.currentUser,
+                            parkId = parkViewModel.selectedPark.value?.id ?: "yosemite",
+                            attractionId = parkViewModel.selectedAttraction.value?.id
+                        )
+                    }
                 )
             }
             composable(Destinations.COMMUNITY) {
@@ -132,6 +145,9 @@ fun ParkMateApp(
                     posts = postState.posts.filter { post ->
                         currentUserId != null && post.userId == currentUserId
                     },
+                    savedParks = profileState.savedParks,
+                    isUploadingPhoto = authState.isUploadingPhoto,
+                    onPhotoSelected = authViewModel::updateProfilePhoto,
                     onBack = { navController.popBackStack() },
                     onLogout = {
                         authViewModel.signOut()
@@ -146,6 +162,7 @@ fun ParkMateApp(
 
     LaunchedEffect(authState.currentUser?.id) {
         postViewModel.setCurrentUser(authState.currentUser?.id)
+        profileViewModel.setCurrentUser(authState.currentUser?.id)
     }
 
     LaunchedEffect(authState.isAuthenticated, currentRoute) {
