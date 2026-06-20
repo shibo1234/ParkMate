@@ -24,17 +24,20 @@ import com.example.parkmate.ui.screens.ProfileScreen
 import com.example.parkmate.ui.screens.UploadScreen
 import com.example.parkmate.viewmodel.AuthViewModel
 import com.example.parkmate.viewmodel.ParkViewModel
+import com.example.parkmate.viewmodel.PostViewModel
 
 @Composable
 fun ParkMateApp(
     parkViewModel: ParkViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    postViewModel: PostViewModel
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route ?: Destinations.HOME
     val showBottomBar = currentRoute in listOf(Destinations.HOME, Destinations.COMMUNITY, Destinations.PROFILE)
     val authState by authViewModel.uiState.collectAsStateWithLifecycle()
+    val postState by postViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         bottomBar = {
@@ -104,23 +107,31 @@ fun ParkMateApp(
             }
             composable(Destinations.UPLOAD) {
                 UploadScreen(
+                    state = postState,
+                    onCaptionChange = postViewModel::updateCaption,
+                    onImageSelected = postViewModel::updateSelectedImage,
                     onBack = { navController.popBackStack() },
-                    onPostCreated = {
-                        navController.navigate(Destinations.COMMUNITY) {
-                            popUpTo(Destinations.HOME)
-                        }
-                    }
+                    onCreatePost = { postViewModel.createPost(authState.currentUser) }
                 )
             }
             composable(Destinations.COMMUNITY) {
                 CommunityScreen(
+                    state = postState,
                     onBack = { navController.popBackStack() },
-                    onUploadClick = { navController.navigate(Destinations.UPLOAD) }
+                    onUploadClick = { navController.navigate(Destinations.UPLOAD) },
+                    onLikeClick = { postId -> postViewModel.toggleLike(postId, authState.currentUser) },
+                    onToggleComments = postViewModel::toggleComments,
+                    onCommentDraftChange = postViewModel::updateCommentDraft,
+                    onSubmitComment = { postViewModel.submitComment(authState.currentUser) }
                 )
             }
             composable(Destinations.PROFILE) {
+                val currentUserId = authState.currentUser?.id
                 ProfileScreen(
                     user = authState.currentUser,
+                    posts = postState.posts.filter { post ->
+                        currentUserId != null && post.userId == currentUserId
+                    },
                     onBack = { navController.popBackStack() },
                     onLogout = {
                         authViewModel.signOut()
@@ -133,10 +144,23 @@ fun ParkMateApp(
         }
     }
 
+    LaunchedEffect(authState.currentUser?.id) {
+        postViewModel.setCurrentUser(authState.currentUser?.id)
+    }
+
     LaunchedEffect(authState.isAuthenticated, currentRoute) {
         if (authState.isAuthenticated && currentRoute == Destinations.LOGIN) {
             navController.navigate(Destinations.HOME) {
                 popUpTo(Destinations.LOGIN) { inclusive = true }
+            }
+        }
+    }
+
+    LaunchedEffect(postState.postCreated) {
+        if (postState.postCreated) {
+            postViewModel.consumePostCreated()
+            navController.navigate(Destinations.COMMUNITY) {
+                popUpTo(Destinations.HOME)
             }
         }
     }
