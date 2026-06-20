@@ -237,13 +237,15 @@ Done:
 - Firebase dependencies added to Gradle.
 - Create the Firebase project and add `app/google-services.json`.
 - Enable the Google Services Gradle plugin.
+- Implement Firebase Auth Registration, Login, Logout, Profile Creation
+- Implement Firebase Storage Upload for photos w/ Android Photo Picker
 
 Next required tasks:
 
-1. Implement Firebase Auth registration, login, logout, and user profile creation.
-2. Replace upload placeholder with Android Photo Picker and Firebase Storage upload.
-3. Replace community placeholder posts with Firestore posts.
-4. Add like and comment repository methods.
+1. Replace community placeholder posts with Firestore posts.
+2. Add like and comment repository methods.
+3. Screen Updates - Show real signed-in user, posted photos, saved parks
+4. Polish & Documentation blocks
 
 ## Firebase Setup Note
 
