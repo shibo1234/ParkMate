@@ -4,6 +4,7 @@ import com.example.parkmate.data.model.Park
 import com.example.parkmate.data.seed.ParkSeedData
 
 class ParkRepository(
+
     private val parks: List<Park> = ParkSeedData.parks
 ) {
     fun getParks(): List<Park> = parks

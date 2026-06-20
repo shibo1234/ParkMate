@@ -263,12 +263,13 @@ Done:
 - Community posts support comments. Each card expands an inline thread that reads the
   `posts/{postId}/comments` subcollection in real time, and posting a comment writes the document and
   increments the atomic `commentCount` in a single Firestore transaction.
+- Profile screen lists posts authored by the current signed-in user.
 
 Next required tasks:
 
-1. Add current-user posts to the profile screen.
-2. Tighten Firestore and Storage security rules for authenticated users.
-3. Final UI polish and emulator walkthrough testing.
+1. Tighten Firestore and Storage security rules for authenticated users.
+2. Final UI polish and emulator walkthrough testing.
+3. Keep Firebase Storage optional unless the project is upgraded to Blaze.
 
 ## Firebase Setup Note
 
