@@ -9,6 +9,11 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+/**
+ * What: Firebase-backed saved parks at users/{uid}/savedParks; streams ids and toggles save state
+ * Who:  Selected by MainActivity when Firebase is configured; used by ProfileViewModel
+ * When: Active whenever Firebase is configured
+ */
 class FirebaseSavedParkRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : SavedParkRepository {

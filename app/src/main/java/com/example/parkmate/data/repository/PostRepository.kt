@@ -6,6 +6,11 @@ import com.example.parkmate.data.model.Post
 import com.example.parkmate.data.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * What: Contract for the community feed, observe/create posts, likes, and comments
+ * Who:  Implemented by FirebasePostRepository and DisabledPostRepository; used by PostViewModel
+ * When: Called while the Community and Upload screens are active
+ */
 interface PostRepository {
     fun observePosts(): Flow<Result<List<Post>>>
 

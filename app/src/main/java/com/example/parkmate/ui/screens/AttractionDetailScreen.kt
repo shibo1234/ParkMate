@@ -25,6 +25,11 @@ import com.example.parkmate.ui.components.ParkMateSectionCard
 import com.example.parkmate.ui.preview.ParkMatePreviewData
 import com.example.parkmate.ui.theme.ParkMateTheme
 
+/**
+ * What: Details for one attraction: trail route, photo spots, food, safety, plus an Upload entry
+ * Who:  Hosted by ParkMateApp; reads the selected attraction from ParkViewModel
+ * When: Opened from a park's attraction list
+ */
 @Composable
 fun AttractionDetailScreen(
     attraction: Attraction?,

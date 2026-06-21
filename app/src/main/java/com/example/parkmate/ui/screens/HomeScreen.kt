@@ -33,6 +33,11 @@ import com.example.parkmate.ui.preview.ParkMatePreviewData
 import com.example.parkmate.ui.theme.ParkMateTheme
 import com.example.parkmate.viewmodel.ParkUiState
 
+/**
+ * What: Searchable list of National Parks; each card opens that park
+ * Who:  Hosted by ParkMateApp; reads ParkUiState from ParkViewModel
+ * When: First screen shown after login (Home tab)
+ */
 @Composable
 fun HomeScreen(
     state: ParkUiState,

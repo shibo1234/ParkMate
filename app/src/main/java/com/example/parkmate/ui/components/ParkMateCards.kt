@@ -14,6 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+/**
+ * What: Reusable titled card for a labeled block of text
+ * Who:  Used by AttractionDetailScreen (trail/food/safety sections) and ParkMateEmptyState
+ * When: Rendered wherever a titled info card is needed
+ */
 @Composable
 fun ParkMateSectionCard(
     title: String,
@@ -43,6 +48,11 @@ fun ParkMateSectionCard(
     }
 }
 
+/**
+ * What: Reusable empty-state card (a styled SectionCard) for "nothing here yet" messages.
+ * Who:  Used by ParkDetailScreen and AttractionDetailScreen when no item is selected.
+ * When: Rendered when a screen has no content to show.
+ */
 @Composable
 fun ParkMateEmptyState(
     title: String,

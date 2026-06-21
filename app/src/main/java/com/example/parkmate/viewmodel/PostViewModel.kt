@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** What/Who/When: UI state for the community feed (posts, likes, comments, upload form, flags). Read by Community/Upload screens. */
 data class PostUiState(
     val posts: List<Post> = emptyList(),
     val likedPostIds: Set<String> = emptySet(),
@@ -34,6 +35,12 @@ data class PostUiState(
     val postCreated: Boolean = false
 )
 
+/**
+ * What: Owns the community feed, streams posts, tracks the user's likes, and handles
+ *       post creation, liking, and commenting with optimistic updates
+ * Who:  Drives CommunityScreen and UploadScreen; uses PostRepository
+ * When: Starts observing posts on init; active while either screen is shown
+ */
 class PostViewModel(
     private val postRepository: PostRepository
 ) : ViewModel() {
@@ -61,6 +68,7 @@ class PostViewModel(
         }
     }
 
+    /** What/Who/When: Validates and uploads a new post; sets postCreated on success so the UI navigates to Community. */
     fun createPost(user: UserProfile?, parkId: String = "yosemite", attractionId: String? = null) {
         val state = uiState.value
         val validationError = PostFormValidator.validateCreatePost(
@@ -138,6 +146,7 @@ class PostViewModel(
         }
     }
 
+    /** What/Who/When: Optimistically flips a post's like state, then persists it; rolls back if the write fails. */
     fun toggleLike(postId: String, user: UserProfile?) {
         if (postId.isBlank() || uiState.value.likingPostId == postId) return
         if (user == null || user.id.isBlank()) {
@@ -239,6 +248,7 @@ class PostViewModel(
         _uiState.update { it.copy(commentDraft = text, errorMessage = null) }
     }
 
+    /** What/Who/When: Validates and sends a comment on the open post. Called by CommunityScreen. */
     fun submitComment(user: UserProfile?) {
         val state = uiState.value
         val postId = state.activeCommentPostId ?: return
@@ -274,6 +284,7 @@ class PostViewModel(
         }
     }
 
+    /** What/Who/When: Collects the live post feed from Firestore into uiState; refreshes liked ids when the feed changes. */
     private fun observePosts() {
         viewModelScope.launch {
             postRepository.observePosts().collect { result ->
@@ -294,6 +305,7 @@ class PostViewModel(
     }
 }
 
+/** What/Who/When: Builds PostViewModel with the chosen PostRepository. Used by MainActivity. */
 class PostViewModelFactory(
     private val postRepository: PostRepository
 ) : ViewModelProvider.Factory {

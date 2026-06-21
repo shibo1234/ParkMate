@@ -1,5 +1,10 @@
 package com.example.parkmate.auth
 
+/**
+ * What: Validates the login and sign-up forms (email format, password length, display name).
+ * Who:  Called by AuthViewModel before each auth call; covered by AuthFormValidatorTest.
+ * When: On Log In and Create Account.
+ */
 object AuthFormValidator {
     fun validateLogin(email: String, password: String): String? {
         return when {

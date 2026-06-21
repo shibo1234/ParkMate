@@ -1,5 +1,10 @@
 package com.example.parkmate.post
 
+/**
+ * What: Validates the post and comment forms (signed-in user and non-empty text)
+ * Who:  Called by PostViewModel before writing; covered by PostFormValidatorTest
+ * When: On create-post and submit-comment
+ */
 object PostFormValidator {
     fun validateCreatePost(userId: String, caption: String): String? {
         return when {

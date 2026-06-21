@@ -3,6 +3,11 @@ package com.example.parkmate.data.model
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 
+/**
+ * What: A community photo post stored at posts/{id} in Firestore
+ * Who:  Written by FirebasePostRepository.createPost; read by the feed and profile
+ * When: Created on upload; likeCount/commentCount updated by transactions
+ */
 data class Post(
     val id: String = "",
     val userId: String = "",

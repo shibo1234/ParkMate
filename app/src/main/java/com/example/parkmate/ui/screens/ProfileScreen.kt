@@ -38,6 +38,11 @@ import com.example.parkmate.data.model.Post
 import com.example.parkmate.data.model.UserProfile
 import com.example.parkmate.ui.theme.ParkMateTheme
 
+/**
+ * What: Signed-in user's profile, avatar/photo upload, saved parks, their own posts, logout
+ * Who:  Hosted by ParkMateApp; reads AuthViewModel (user) and ProfileViewModel (saved parks)
+ * When: Shown on the Profile tab
+ */
 @Composable
 fun ProfileScreen(
     user: UserProfile?,

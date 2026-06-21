@@ -32,6 +32,11 @@ import com.example.parkmate.ui.components.ParkMateEmptyState
 import com.example.parkmate.ui.preview.ParkMatePreviewData
 import com.example.parkmate.ui.theme.ParkMateTheme
 
+/**
+ * What: Park overview with image, description, attractions, and save/unsave
+ * Who:  Hosted by ParkMateApp; reads the selected park and saved-park state
+ * When: Opened from a Home park card
+ */
 @Composable
 fun ParkDetailScreen(
     park: Park?,

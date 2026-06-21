@@ -21,6 +21,11 @@ import androidx.compose.ui.unit.dp
 import com.example.parkmate.ui.theme.ParkMateTheme
 import com.example.parkmate.viewmodel.AuthUiState
 
+/**
+ * What: Email/password sign-in and account registration form
+ * Who:  Hosted by ParkMateApp; reads AuthUiState and calls back into AuthViewModel
+ * When: Shown whenever the user is signed out (entry screen and after logout)
+ */
 @Composable
 fun LoginScreen(
     state: AuthUiState,

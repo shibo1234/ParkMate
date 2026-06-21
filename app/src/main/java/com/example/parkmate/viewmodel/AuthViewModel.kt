@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** What/Who/When: UI state for the auth/login screen (form fields, current user, flags). Read by LoginScreen and the nav gate. */
 data class AuthUiState(
     val displayName: String = "",
     val email: String = "",
@@ -26,6 +27,12 @@ data class AuthUiState(
         get() = currentUser != null
 }
 
+/**
+ * What: Holds the login/sign-up form state and the signed-in user; exposes sign-in,
+ *       sign-up, logout, and profile-photo update as UI state
+ * Who:  Observed by LoginScreen, ProfileScreen, and ParkMateApp's auth gate
+ * When: Created in MainActivity; lives for the whole session
+ */
 class AuthViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
@@ -46,6 +53,7 @@ class AuthViewModel(
         _uiState.update { it.copy(password = password, errorMessage = null) }
     }
 
+    /** What/Who/When: Validates the form, then signs an existing user in. Called by LoginScreen's Log In. */
     fun signIn() {
         val state = uiState.value
         val validationError = AuthFormValidator.validateLogin(state.email, state.password)
@@ -59,6 +67,7 @@ class AuthViewModel(
         }
     }
 
+    /** What/Who/When: Validates the form, then registers a new user. Called by LoginScreen's Create Account. */
     fun signUp() {
         val state = uiState.value
         val validationError = AuthFormValidator.validateSignUp(
@@ -76,6 +85,7 @@ class AuthViewModel(
         }
     }
 
+    /** What/Who/When: Uploads a new profile photo for the signed-in user. Called by ProfileScreen. */
     fun updateProfilePhoto(photoUri: Uri?) {
         val userId = uiState.value.currentUser?.id
         if (photoUri == null || userId.isNullOrBlank()) return
@@ -125,6 +135,7 @@ class AuthViewModel(
     }
 }
 
+/** What/Who/When: Builds AuthViewModel with the chosen AuthRepository. Used by MainActivity's ViewModelProvider. */
 class AuthViewModelFactory(
     private val authRepository: AuthRepository
 ) : ViewModelProvider.Factory {

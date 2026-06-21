@@ -35,6 +35,11 @@ import com.example.parkmate.data.model.Post
 import com.example.parkmate.ui.theme.ParkMateTheme
 import com.example.parkmate.viewmodel.PostUiState
 
+/**
+ * What: Live community feed, lists posts with photos, like buttons, and expandable comments
+ * Who:  Hosted by ParkMateApp; renders PostUiState and calls back into PostViewModel
+ * When: Shown on the Community tab
+ */
 @Composable
 fun CommunityScreen(
     state: PostUiState,

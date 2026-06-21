@@ -29,6 +29,11 @@ import coil.compose.AsyncImage
 import com.example.parkmate.ui.theme.ParkMateTheme
 import com.example.parkmate.viewmodel.PostUiState
 
+/**
+ * What: Photo-picker and caption form for creating a new community post
+ * Who:  Hosted by ParkMateApp; drives PostViewModel.createPost via PostUiState
+ * When: Opened from an attraction or the Community screen
+ */
 @Composable
 fun UploadScreen(
     state: PostUiState,

@@ -9,11 +9,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/** What/Who/When: UI state for the park list (parks and current search query). Read by HomeScreen. */
 data class ParkUiState(
     val parks: List<Park> = emptyList(),
     val searchQuery: String = ""
 )
 
+/**
+ * What: Serves the searchable park list and tracks the selected park/attraction
+ * Who:  Drives HomeScreen, ParkDetailScreen, and AttractionDetailScreen
+ * When: Holds selection state across navigation for the session
+ */
 class ParkViewModel(
     private val repository: ParkRepository = ParkRepository()
 ) : ViewModel() {

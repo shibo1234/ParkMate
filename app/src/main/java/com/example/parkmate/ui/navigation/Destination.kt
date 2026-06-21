@@ -1,5 +1,10 @@
 package com.example.parkmate.ui.navigation
 
+/**
+ * What: Route names for the navigation graph
+ * Who:  Used by ParkMateApp's NavHost and bottom bar
+ * When: Referenced on every navigation action
+ */
 object Destinations {
     const val LOGIN = "login"
     const val HOME = "home"

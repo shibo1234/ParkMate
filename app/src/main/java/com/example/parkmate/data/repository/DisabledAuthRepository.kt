@@ -3,6 +3,11 @@ package com.example.parkmate.data.repository
 import android.net.Uri
 import com.example.parkmate.data.model.UserProfile
 
+/**
+ * What: No-op AuthRepository used when Firebase isn't configured; auth calls fail with a setup message
+ * Who:  Selected by MainActivity when FirebaseApp didn't initialize
+ * When: Active only when google-services.json is missing/invalid
+ */
 class DisabledAuthRepository : AuthRepository {
     override fun currentUser(): UserProfile? = null
 

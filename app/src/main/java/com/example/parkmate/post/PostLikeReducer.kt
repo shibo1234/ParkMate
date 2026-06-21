@@ -15,6 +15,9 @@ data class LikeToggleResult(
     val nowLiked: Boolean
 )
 
+/**
+ * What/Who/When: Pure like/unlike state computation for PostViewModel's optimistic updates; unit-tested by PostLikeReducerTest.
+ */
 object PostLikeReducer {
     fun isLiked(likedPostIds: Set<String>, postId: String): Boolean {
         return postId in likedPostIds

@@ -7,6 +7,11 @@ import com.example.parkmate.data.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
+/**
+ * What: No-op PostRepository used when Firebase isn't configured; feed/post actions fail or return empty
+ * Who:  Selected by MainActivity when FirebaseApp didn't initialize
+ * When: Active only when google-services.json is missing/invalid
+ */
 class DisabledPostRepository : PostRepository {
     override fun observePosts(): Flow<Result<List<Post>>> {
         return flowOf(Result.failure(IllegalStateException(SETUP_MESSAGE)))

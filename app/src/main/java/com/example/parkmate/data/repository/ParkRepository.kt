@@ -3,6 +3,11 @@ package com.example.parkmate.data.repository
 import com.example.parkmate.data.model.Park
 import com.example.parkmate.data.seed.ParkSeedData
 
+/**
+ * What: Serves the National Park guide content (list, lookup by id, search) from local seed data
+ * Who:  Used by ParkViewModel and ProfileViewModel to resolve parks
+ * When: Read at startup and on every search keystroke
+ */
 class ParkRepository(
 
     private val parks: List<Park> = ParkSeedData.parks

@@ -13,12 +13,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** What/Who/When: UI state for the profile's saved parks. Read by ProfileScreen and ParkDetailScreen. */
 data class ProfileUiState(
     val savedParkIds: Set<String> = emptySet(),
     val savedParks: List<Park> = emptyList(),
     val errorMessage: String? = null
 )
 
+/**
+ * What: Streams the signed-in user's saved parks and exposes save/unsave with optimistic updates
+ * Who:  Drives ProfileScreen and the save toggle on ParkDetailScreen; uses SavedParkRepository
+ * When: Re-subscribes whenever the current user changes
+ */
 class ProfileViewModel(
     private val savedParkRepository: SavedParkRepository,
     private val parkRepository: ParkRepository = ParkRepository()
@@ -50,6 +56,7 @@ class ProfileViewModel(
 
     fun isParkSaved(parkId: String): Boolean = parkId in uiState.value.savedParkIds
 
+    /** What/Who/When: Optimistically saves/unsaves a park, then persists it; rolls back on failure. */
     fun toggleSavedPark(parkId: String, userId: String?) {
         if (parkId.isBlank()) return
         if (userId.isNullOrBlank()) {
@@ -91,6 +98,7 @@ class ProfileViewModel(
     }
 }
 
+/** What/Who/When: Builds ProfileViewModel with the chosen SavedParkRepository. Used by MainActivity. */
 class ProfileViewModelFactory(
     private val savedParkRepository: SavedParkRepository
 ) : ViewModelProvider.Factory {

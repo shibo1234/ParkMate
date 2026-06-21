@@ -19,6 +19,12 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+/**
+ * What: Firebase-backed posts. Uploads photos to Storage, writes posts to Firestore,
+ *       and runs like/comment counters inside transactions; streams the feed live
+ * Who:  Selected by MainActivity when Firebase is configured; used by PostViewModel
+ * When: Active whenever Firebase is configured
+ */
 class FirebasePostRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()

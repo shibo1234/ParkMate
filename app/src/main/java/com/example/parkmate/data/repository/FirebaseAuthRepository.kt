@@ -13,6 +13,12 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+/**
+ * What: Firebase-backed auth. Creates accounts, signs in/out, and keeps the
+ *       users/{uid} Firestore profile (displayName, email, photo) in sync
+ * Who:  Selected by MainActivity when Firebase is configured; used by AuthViewModel
+ * When: Active whenever a valid google-services.json is present
+ */
 class FirebaseAuthRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),

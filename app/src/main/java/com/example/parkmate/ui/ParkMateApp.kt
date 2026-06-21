@@ -27,6 +27,12 @@ import com.example.parkmate.viewmodel.ParkViewModel
 import com.example.parkmate.viewmodel.PostViewModel
 import com.example.parkmate.viewmodel.ProfileViewModel
 
+/**
+ * What: Root scaffold and navigation graph; routes between the seven screens, hosts the
+ *       Home/Community/Profile bottom bar, and gates Login based on auth state
+ * Who:  Hosted by MainActivity; reads state from every ViewModel
+ * When: Composed for the lifetime of the app
+ */
 @Composable
 fun ParkMateApp(
     parkViewModel: ParkViewModel,
