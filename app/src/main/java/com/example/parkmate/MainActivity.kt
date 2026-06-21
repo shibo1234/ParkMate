@@ -21,6 +21,10 @@ import com.example.parkmate.viewmodel.PostViewModelFactory
 import com.example.parkmate.viewmodel.ProfileViewModel
 import com.example.parkmate.viewmodel.ProfileViewModelFactory
 import com.google.firebase.FirebaseApp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * What: App entry point. Builds the Auth/Post/Profile ViewModels (choosing Firebase or
@@ -35,7 +39,26 @@ class MainActivity : ComponentActivity() {
     private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        var keepSplashOnScreen = true
+        splashScreen.setKeepOnScreenCondition { keepSplashOnScreen }
+        lifecycleScope.launch {
+            delay(700L)
+            keepSplashOnScreen = false
+        }
+
+        splashScreen.setOnExitAnimationListener { splashScreenView ->
+            splashScreenView.iconView.animate()
+                .alpha(0f)
+                .scaleX(1.5f)
+                .scaleY(1.5f)
+                .setDuration(450L)
+                .withEndAction { splashScreenView.remove() }
+                .start()
+        }
+
         authViewModel = ViewModelProvider(
             this,
             AuthViewModelFactory(createAuthRepository())

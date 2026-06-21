@@ -1,3 +1,9 @@
 <resources>
     <style name="Theme.ParkMate" parent="android:style/Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.ParkMate.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/parkmate_logo_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/parkmate_logo_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.ParkMate</item>
+    </style>
 </resources>
