@@ -25,7 +25,6 @@ class FirebasePostRepository(
 ) : PostRepository {
     override fun observePosts(): Flow<Result<List<Post>>> = callbackFlow {
         val listener = firestore.collection(POSTS_COLLECTION)
-            .orderBy("createdAtMillis", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     trySend(Result.failure(error))
@@ -45,7 +44,7 @@ class FirebasePostRepository(
                         commentCount = document.getLong("commentCount")?.toInt() ?: 0,
                         createdAtMillis = document.getLong("createdAtMillis") ?: 0L
                     )
-                }
+                }.sortedByDescending { it.createdAtMillis }
                 trySend(Result.success(posts))
             }
 

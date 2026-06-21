@@ -31,16 +31,38 @@ class FirebaseAuthRepository(
     override suspend fun signIn(email: String, password: String): Result<UserProfile> {
         return runCatching {
             val authResult = auth.signInWithEmailAndPassword(email.trim(), password).await()
-            val user = authResult.toUserProfile()
-            // Make sure a users/{uid} document exists even for accounts created before this was added.
-            firestore.collection("users")
-                .document(user.id)
-                .set(
-                    mapOf("displayName" to user.displayName, "email" to user.email),
-                    SetOptions.merge()
-                )
-                .await()
-            user
+            val firebaseUser = authResult.user ?: error("Firebase did not return a user.")
+            val uid = firebaseUser.uid
+
+            val snapshot = firestore.collection("users").document(uid).get().await()
+            val storedName = snapshot.getString("displayName").orEmpty()
+            val authName = firebaseUser.displayName.orEmpty()
+            val displayName = storedName.ifBlank { authName }
+
+            if (authName.isBlank() && displayName.isNotBlank()) {
+                firebaseUser.updateProfile(
+                    userProfileChangeRequest { this.displayName = displayName }
+                ).await()
+            }
+            if (storedName.isBlank() && displayName.isNotBlank()) {
+                firestore.collection("users").document(uid)
+                    .set(
+                        mapOf("displayName" to displayName, "email" to firebaseUser.email.orEmpty()),
+                        SetOptions.merge()
+                    )
+                    .await()
+            } else {
+                firestore.collection("users").document(uid)
+                    .set(mapOf("email" to firebaseUser.email.orEmpty()), SetOptions.merge())
+                    .await()
+            }
+
+            UserProfile(
+                id = uid,
+                displayName = displayName,
+                email = firebaseUser.email.orEmpty(),
+                photoUrl = snapshot.getString("photoUrl") ?: firebaseUser.photoUrl?.toString()
+            )
         }
     }
 
