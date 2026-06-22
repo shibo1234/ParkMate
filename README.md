@@ -1,6 +1,6 @@
 # ParkMate
 
-**Version:** 0.6.0
+**Version:** 0.6.1
 
 ParkMate is a native Android travel companion app for National Park visitors. It combines a focused park guide with a photo-sharing community so users can plan a visit, browse attractions, upload photos, and exchange tips with other travelers.
 
@@ -43,9 +43,18 @@ To connect a real Firebase project:
 4. Place it at `app/google-services.json`.
 5. Enable Email/Password sign-in in Firebase Authentication.
 6. Create a Firestore database.
-7. Use test-mode Firestore rules during local development, then tighten the rules before release.
+7. Review `firestore.rules` and `storage.rules`, then deploy them to the Firebase project.
+8. Create a Firebase Storage bucket before testing post or profile photo uploads.
 
-The Gradle build automatically applies the Google Services plugin when `app/google-services.json` is present. The file is gitignored so local Firebase credentials are not committed.
+The Gradle build automatically applies the Google Services plugin when `app/google-services.json` is present. The file is gitignored so local Firebase credentials are not committed. The rule files in this repository are not deployed automatically.
+
+### Local Verification
+
+Run the unit tests and assemble a debug APK before pushing changes:
+
+```bash
+./gradlew testDebugUnitTest assembleDebug
+```
 
 ### System Architecture
 
@@ -70,7 +79,8 @@ ParkMate Android App
 |-- Repository Layer
 |   |-- AuthRepository
 |   |-- ParkRepository
-|   `-- PostRepository
+|   |-- PostRepository
+|   `-- SavedParkRepository
 |
 `-- Data Sources
     |-- Firebase Authentication
@@ -167,7 +177,7 @@ users/{userId}
   displayName: string
   email: string
   photoUrl: string?
-  createdAt: timestamp
+  createdAtMillis: number
 
 posts/{postId}
   userId: string
@@ -178,21 +188,21 @@ posts/{postId}
   caption: string
   likeCount: number
   commentCount: number
-  createdAt: timestamp
+  createdAtMillis: number
 
 posts/{postId}/comments/{commentId}
   userId: string
   userName: string
   text: string
-  createdAt: timestamp
+  createdAtMillis: number
 
 posts/{postId}/likes/{userId}
   userId: string
-  createdAt: timestamp
+  createdAtMillis: number
 
 users/{userId}/savedParks/{parkId}
   parkId: string
-  savedAt: timestamp
+  savedAtMillis: number
 ```
 
 ### Firebase Storage Paths
